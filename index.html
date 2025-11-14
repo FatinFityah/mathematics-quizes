@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>True/False Math Quiz</title>
+    <title>Math Quiz - Space Theme</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="game-container">
-        <div class="game-header">
-            <h2>True or False Math Quiz</h2>
-            <p>Is the equation correct? Judge quickly!</p>
+        <div class="question-header">
+            Question <span id="question-number">1</span>:
         </div>
         
-        <div id="timer-display" class="timer">60</div> 
-
-        <div id="equation-display" class="question">
-            5 + 3 = 8
+        <div id="equation-display" class="equation-display">
+            8 - 6 = ?
         </div>
 
-        <div class="choice-btn-container">
-            <button id="true-btn" class="choice-btn true-btn">True</button>
-            <button id="false-btn" class="choice-btn false-btn">False</button>
+        <div class="choices-grid">
+            <button class="choice-btn" data-choice="A">
+                <span class="choice-letter">A</span> <span class="choice-value" id="choice-A-value">2</span>
+            </button>
+            <button class="choice-btn" data-choice="B">
+                <span class="choice-letter">B</span> <span class="choice-value" id="choice-B-value">4</span>
+            </button>
+            <button class="choice-btn" data-choice="C">
+                <span class="choice-letter">C</span> <span class="choice-value" id="choice-C-value">3</span>
+            </button>
+            <button class="choice-btn" data-choice="D">
+                <span class="choice-letter">D</span> <span class="choice-value" id="choice-D-value">5</span>
+            </button>
         </div>
         
         <div id="feedback" class="feedback"></div>
@@ -31,7 +39,9 @@
             Score: <span id="score">0</span>
         </div>
         
-        <button id="start-game-btn" class="start-game-btn">Start Game</button>
+        <div id="timer-display" class="timer">13</div> 
+        
+        <button id="start-game-btn" class="start-game-btn">Start Quiz</button>
     </div>
 
     <script src="script.js"></script>
