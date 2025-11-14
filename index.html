@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Whiz Game</title>
+    <title>True/False Math Quiz</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="game-container">
         <div class="game-header">
-            <h2>Math Quiz Game</h2>
-            <p>Test your math skills within the time limit.</p>
+            <h2>True or False Math Quiz</h2>
+            <p>Is the equation correct? Judge quickly!</p>
         </div>
         
-        <div id="timer-display" class="timer">--</div> 
+        <div id="timer-display" class="timer">60</div> 
 
-        <div id="question-container" class="question">
-            What is <span id="num1">5</span> x <span id="num2">8</span>?
+        <div id="equation-display" class="question">
+            5 + 3 = 8
         </div>
 
-        <input type="number" id="answer-input" class="answer-input" placeholder="Your Answer" autocomplete="off">
+        <div class="choice-btn-container">
+            <button id="true-btn" class="choice-btn true-btn">True</button>
+            <button id="false-btn" class="choice-btn false-btn">False</button>
+        </div>
         
-        <button id="submit-btn" class="submit-btn">Submit Answer</button>
-
         <div id="feedback" class="feedback"></div>
 
         <div id="score-container" class="score-container">
