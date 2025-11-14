@@ -1,6 +1,9 @@
+/* --- SPACE THEME MULTIPLE CHOICE QUIZ --- */
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: url('https://i.imgur.com/your-colorful-numbers-background.png'); /* Replace with your background URL */
+    font-family: 'Poppins', sans-serif; /* A modern, friendly font */
+    background-color: #8c7ae6; /* Base purple from image */
+    background-image: url('https://i.imgur.com/example-space-background.png'); /* Replace with a real image if you find one, otherwise delete */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -10,8 +13,11 @@ body {
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden; /* Hide any overflow from design elements */
 }
 
+/* Fallback for background image or if you prefer solid color */
 body::before {
     content: '';
     position: absolute;
@@ -19,161 +25,223 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #f0f4f8; /* Light blue/grey fallback */
+    background-color: #8c7ae6; /* Base purple */
     z-index: -1;
 }
 
-.game-container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-    position: relative;
+/* Cosmic elements (simple CSS stars and meteors) */
+.game-container::before, .game-container::after {
+    content: '';
+    position: absolute;
+    background-color: #fbd34d; /* Yellow for stars */
+    border-radius: 50%;
+    filter: blur(0.5px);
+    opacity: 0.7;
+    z-index: -1;
 }
 
-.game-header {
-    background-color: #3f9af7;
-    color: white;
-    padding: 1.2rem 0.5rem;
-    margin: -2.5rem -2rem 1.5rem -2rem;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+.game-container::before {
+    width: 20px; height: 20px;
+    top: 10%; left: 10%;
+    transform: rotate(30deg);
+}
+.game-container::after {
+    width: 15px; height: 15px;
+    bottom: 15%; right: 15%;
+    transform: rotate(-20deg);
+}
+
+/* Animated meteors - simple circles for demonstration */
+body > div:nth-child(1)::before, body > div:nth-child(1)::after {
+    content: '';
+    position: absolute;
+    background-color: #5352ed; /* Darker blue/purple for meteors */
+    border-radius: 50%;
+    width: 60px; height: 60px;
+    opacity: 0.8;
+    box-shadow: 0 0 15px #5352ed;
+    z-index: -1;
+}
+body > div:nth-child(1)::before { /* Top-left meteor */
+    top: 5%; left: -30px;
+    transform: rotate(-45deg);
+    animation: meteor-top-left 8s infinite linear;
+}
+body > div:nth-child(1)::after { /* Bottom-right meteor */
+    bottom: 5%; right: -30px;
+    transform: rotate(135deg);
+    animation: meteor-bottom-right 8s infinite linear;
+}
+
+@keyframes meteor-top-left {
+    0% { top: 5%; left: -30px; }
+    50% { top: 30%; left: 150px; }
+    100% { top: 5%; left: -30px; }
+}
+@keyframes meteor-bottom-right {
+    0% { bottom: 5%; right: -30px; }
+    50% { bottom: 30%; right: 150px; }
+    100% { bottom: 5%; right: -30px; }
+}
+
+
+.game-container {
+    background-color: #f7f7f7; /* Light background for the main card */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Soft, deep shadow */
+    padding: 3rem 2rem 2rem 2rem; /* More padding top */
+    text-align: center;
+    width: 100%;
+    max-width: 450px; /* Slightly wider */
+    position: relative;
+    border: 3px solid #ff9ff3; /* Pink border accent */
+    z-index: 1; /* Ensure it's above background elements */
+}
+
+.question-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 1.5rem;
+    text-align: left; /* Align question text to the left */
+}
+
+#question-number {
+    color: #5352ed; /* Blue accent */
+}
+
+.equation-display {
+    font-size: 3.5rem; /* Very large question */
+    font-weight: bold;
+    color: #5352ed; /* Blue for the equation */
+    margin: 1.5rem 0 2.5rem 0;
+    letter-spacing: 2px;
+}
+
+/* Choices Grid */
+.choices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 15px; /* Space between buttons */
+    margin-bottom: 2rem;
+}
+
+.choice-btn {
+    background-color: #ffffff; /* White background for choice buttons */
+    border: 3px solid #fbd34d; /* Yellow border */
+    border-radius: 10px;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    font-size: 1.8rem; /* Large font for answers */
+    font-weight: bold;
+    color: #5352ed; /* Blue text for answers */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.choice-btn:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    border-color: #ff9ff3; /* Pink on hover */
+}
+
+.choice-btn:active {
+    transform: translateY(0);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.game-header h2 {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-.game-header p {
-    margin: 0.5rem 0 0 0;
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.timer {
-    background-color: #ff9800;
-    color: white;
-    font-size: 1.8rem;
-    font-weight: bold;
-    width: 60px;
-    height: 60px;
+.choice-letter {
+    background-color: #ff9ff3; /* Pink circle for letter */
+    color: #5352ed; /* Dark blue letter */
     border-radius: 50%;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    border: 3px solid #fff;
-    z-index: 10;
+    font-size: 1.2rem;
+    margin-right: 15px; /* Space between letter and value */
+    flex-shrink: 0; /* Prevent shrinking */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-.question {
-    font-size: 2.5rem; /* Made text even larger for the equation */
-    margin: 2.5rem 0 2rem 0; /* More space below */
-    color: #333;
-    font-weight: bold;
-    min-height: 50px; /* Reserve space */
+.choice-value {
+    /* The actual answer number */
+    color: #5352ed;
 }
 
+
+/* Feedback and Score */
 .feedback {
-    margin-top: 1.5rem;
-    font-size: 1.3rem;
+    margin-top: 1rem;
+    font-size: 1.4rem;
     font-weight: bold;
-    height: 25px;
+    height: 30px; /* More space */
     transition: color 0.3s ease;
 }
 
-.correct {
-    color: #28a744;
-}
-
-.wrong {
-    color: #dc3545;
-}
+.correct { color: #28a744; }
+.wrong { color: #dc3545; }
 
 .score-container {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     font-size: 1.3rem;
-    color: #555;
+    color: #4a4a4a;
     font-weight: 500;
 }
 
 #score {
     font-weight: bold;
-    color: #007bff;
+    color: #5352ed; /* Blue accent */
 }
 
+/* Timer */
+.timer {
+    background-color: #fbd34d; /* Yellow for timer */
+    color: #5352ed; /* Dark blue text */
+    font-size: 1.6rem;
+    font-weight: bold;
+    width: 70px; /* Larger timer circle */
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: -35px; /* Position it below the container */
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 3px solid #ff9ff3; /* Pink border */
+    z-index: 10;
+}
+
+/* Start Game Button */
 .start-game-btn {
-    background-color: #3f9af7; /* Blue to match header */
-    color: white;
+    background-color: #fbd34d; /* Yellow */
+    color: #5352ed; /* Dark blue text */
     border: none;
-    padding: 0.9rem 2rem;
-    border-radius: 5px;
-    font-size: 1.1rem;
+    padding: 1rem 2.5rem;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
     cursor: pointer;
     width: calc(100% - 40px);
-    margin-top: 1.5rem;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem; /* More space */
+    transition: all 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .start-game-btn:hover {
-    background-color: #3080e0;
-    transform: translateY(-2px);
+    background-color: #ffc400; /* Darker yellow */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* --- NEW STYLES FOR TRUE/FALSE BUTTONS --- */
-
-.choice-btn-container {
-    display: flex;
-    justify-content: space-between; /* Space buttons apart */
-    gap: 15px; /* Add gap between buttons */
-    margin-top: 1rem;
-}
-
-.choice-btn {
-    flex: 1; /* Make buttons share space equally */
-    border: none;
-    padding: 0.9rem;
-    border-radius: 5px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.1s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.choice-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.choice-btn:active {
+.start-game-btn:active {
     transform: translateY(0);
-}
-
-.true-btn {
-    background-color: #28a745; /* Green */
-}
-
-.true-btn:hover {
-    background-color: #218838;
-}
-
-.false-btn {
-    background-color: #dc3545; /* Red */
-}
-
-.false-btn:hover {
-    background-color: #c82333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
