@@ -6,42 +6,38 @@ const inputEl = document.getElementById('answer-input');
 const submitBtn = document.getElementById('submit-btn');
 const feedbackEl = document.getElementById('feedback');
 const scoreEl = document.getElementById('score');
-const timerDisplay = document.getElementById('timer-display'); // New: Timer element
-const startGameBtn = document.getElementById('start-game-btn'); // New: Start Game button
+const timerDisplay = document.getElementById('timer-display');
+const startGameBtn = document.getElementById('start-game-btn');
 
-// Initialize variables
+// --- Game Variables ---
 let score = 0;
 let num1, num2, correctAnswer;
-let gameStarted = false; // New: Flag to control game start
-let timer; // For a potential future timer (not implemented yet)
+let gameStarted = false;
+let timerInterval; // To store the interval ID
+let timeLeft = 60; // Set game time to 60 seconds
 
 // Function to generate a new question
 function generateQuestion() {
-    // Generate two random numbers between 1 and 10
     num1 = Math.ceil(Math.random() * 10);
     num2 = Math.ceil(Math.random() * 10);
-    
-    // Calculate the correct answer
     correctAnswer = num1 * num2;
 
-    // Update the question text in the HTML
     num1El.innerText = num1;
     num2El.innerText = num2;
 
-    // Clear previous feedback and input
     feedbackEl.innerText = '';
     inputEl.value = '';
     feedbackEl.classList.remove('correct', 'wrong');
-    inputEl.focus(); // Keep focus on the input for quick play
+    inputEl.focus(); 
 }
 
 // Function to check the user's answer
 function checkAnswer() {
-    if (!gameStarted) return; // Don't check answer if game hasn't started
+    // Only check if the game is running
+    if (!gameStarted) return; 
 
     const userAnswer = parseInt(inputEl.value);
 
-    // Basic validation: if input is empty or not a number, don't proceed
     if (isNaN(userAnswer) || inputEl.value.trim() === '') {
         feedbackEl.innerText = 'Please enter a number!';
         feedbackEl.classList.add('wrong');
@@ -58,26 +54,68 @@ function checkAnswer() {
     }
 
     scoreEl.innerText = score;
-    setTimeout(generateQuestion, 1500); // 1.5-second delay before next question
+    
+    // Generate a new question immediately
+    // We remove the timeout to allow for rapid play
+    generateQuestion();
 }
 
-// Function to start the game
-function startGame() {
-    gameStarted = true;
-    score = 0; // Reset score
-    scoreEl.innerText = score;
-    startGameBtn.style.display = 'none'; // Hide start button
-    inputEl.style.display = 'block'; // Show input field
-    submitBtn.style.display = 'block'; // Show submit button
-    questionEl.style.display = 'block'; // Show question
-    timerDisplay.innerText = '--'; // Reset timer display
+// --- New Timer Functions ---
 
-    // Initially hide feedback if not needed at start
-    feedbackEl.innerText = ''; 
+// Function to update the timer display
+function updateTimer() {
+    timeLeft--;
+    timerDisplay.innerText = timeLeft;
+
+    if (timeLeft <= 0) {
+        endGame();
+    }
+}
+
+// Function to handle the end of the game
+function endGame() {
+    // Stop the timer
+    clearInterval(timerInterval); 
+    gameStarted = false;
+
+    // Show feedback
+    feedbackEl.innerText = `Time's up! Your final score is ${score}.`;
+    feedbackEl.classList.remove('correct', 'wrong');
+
+    // Hide game elements and show start button
+    inputEl.style.display = 'none';
+    submitBtn.style.display = 'none';
+    questionEl.style.display = 'none';
+    startGameBtn.style.display = 'block'; // Show "Start Game" button again
+    startGameBtn.innerText = "Play Again?"; // Change button text
+}
+
+// --- Updated Start Game Function ---
+function startGame() {
+    // Stop any existing timer
+    clearInterval(timerInterval); 
+
+    // Reset game state
+    gameStarted = true;
+    score = 0; 
+    timeLeft = 60; // Reset timer
+    scoreEl.innerText = score;
+    timerDisplay.innerText = timeLeft;
+
+    // Show/hide the correct elements
+    startGameBtn.style.display = 'none'; 
+    inputEl.style.display = 'block'; 
+    submitBtn.style.display = 'block'; 
+    questionEl.style.display = 'block';
+    feedbackEl.innerText = '';
     feedbackEl.classList.remove('correct', 'wrong');
 
     generateQuestion();
-    inputEl.focus(); // Focus on input when game starts
+    inputEl.focus();
+
+    // Start the timer
+    // setInterval will call the 'updateTimer' function every 1000ms (1 second)
+    timerInterval = setInterval(updateTimer, 1000);
 }
 
 
@@ -91,7 +129,7 @@ inputEl.addEventListener('keydown', function(event) {
     }
 });
 
-startGameBtn.addEventListener('click', startGame); // New: Listen for start game button click
+startGameBtn.addEventListener('click', startGame); 
 
 // --- Initial Setup ---
 
@@ -99,6 +137,4 @@ startGameBtn.addEventListener('click', startGame); // New: Listen for start game
 inputEl.style.display = 'none';
 submitBtn.style.display = 'none';
 questionEl.style.display = 'none';
-
-// You could also initialize the timer display if you plan to add a countdown
-// For now, it just shows '--'
+timerDisplay.innerText = '60'; // Show the starting time
