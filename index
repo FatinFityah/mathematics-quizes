@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Whiz Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="game-header">
+            <h2>Math Quiz Game</h2>
+            <p>Test your math skills within the time limit.</p>
+        </div>
+        
+        <div id="timer-display" class="timer">--</div> 
+
+        <div id="question-container" class="question">
+            What is <span id="num1">5</span> x <span id="num2">8</span>?
+        </div>
+
+        <input type="number" id="answer-input" class="answer-input" placeholder="Your Answer" autocomplete="off">
+        
+        <button id="submit-btn" class="submit-btn">Submit Answer</button>
+
+        <div id="feedback" class="feedback"></div>
+
+        <div id="score-container" class="score-container">
+            Score: <span id="score">0</span>
+        </div>
+        
+        <button id="start-game-btn" class="start-game-btn">Start Game</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
