@@ -1,68 +1,92 @@
 // Get references to the HTML elements
-const num1El = document.getElementById('num1');
-const num2El = document.getElementById('num2');
-const questionEl = document.getElementById('question-container');
-const inputEl = document.getElementById('answer-input');
-const submitBtn = document.getElementById('submit-btn');
+const equationDisplay = document.getElementById('equation-display');
+const trueBtn = document.getElementById('true-btn');
+const falseBtn = document.getElementById('false-btn');
 const feedbackEl = document.getElementById('feedback');
 const scoreEl = document.getElementById('score');
 const timerDisplay = document.getElementById('timer-display');
 const startGameBtn = document.getElementById('start-game-btn');
+const choiceBtnContainer = document.querySelector('.choice-btn-container'); // Get button container
 
 // --- Game Variables ---
 let score = 0;
-let num1, num2, correctAnswer;
 let gameStarted = false;
-let timerInterval; // To store the interval ID
-let timeLeft = 60; // Set game time to 60 seconds
+let timerInterval;
+let timeLeft = 60;
+let isEquationCorrect; // To store if the current equation is true or false
 
-// Function to generate a new question
-function generateQuestion() {
-    num1 = Math.ceil(Math.random() * 10);
-    num2 = Math.ceil(Math.random() * 10);
-    correctAnswer = num1 * num2;
+// Function to generate a random number
+function getRandomInt(max) {
+    return Math.ceil(Math.random() * max);
+}
 
-    num1El.innerText = num1;
-    num2El.innerText = num2;
+// Function to generate a new equation
+function generateEquation() {
+    let num1 = getRandomInt(10);
+    let num2 = getRandomInt(10);
+    let operator = ['+', '-', 'x'][getRandomInt(3) - 1]; // Pick +, -, or x
+    let correctAnswer;
 
+    // --- Calculate the correct answer ---
+    if (operator === '+') {
+        correctAnswer = num1 + num2;
+    } else if (operator === '-') {
+        // Ensure result is not negative for simplicity
+        if (num1 < num2) {
+            [num1, num2] = [num2, num1]; // Swap num1 and num2
+        }
+        correctAnswer = num1 - num2;
+    } else { // operator === 'x'
+        correctAnswer = num1 * num2;
+    }
+
+    let displayedAnswer;
+    
+    // Randomly decide (50/50) to show a true or false equation
+    if (Math.random() > 0.5) {
+        // Show the CORRECT answer
+        displayedAnswer = correctAnswer;
+        isEquationCorrect = true;
+    } else {
+        // Show a WRONG answer
+        let offset = getRandomInt(3) * (Math.random() > 0.5 ? 1 : -1); // Add/subtract 1, 2, or 3
+        if (offset === 0) offset = 1; // Ensure it's not zero
+        
+        displayedAnswer = correctAnswer + offset;
+        isEquationCorrect = false;
+    }
+
+    // Display the full equation
+    equationDisplay.innerText = `${num1} ${operator} ${num2} = ${displayedAnswer}`;
+
+    // Clear old feedback
     feedbackEl.innerText = '';
-    inputEl.value = '';
     feedbackEl.classList.remove('correct', 'wrong');
-    inputEl.focus(); 
 }
 
 // Function to check the user's answer
-function checkAnswer() {
-    // Only check if the game is running
-    if (!gameStarted) return; 
+function checkAnswer(userChoice) { // userChoice will be true or false
+    if (!gameStarted) return;
 
-    const userAnswer = parseInt(inputEl.value);
-
-    if (isNaN(userAnswer) || inputEl.value.trim() === '') {
-        feedbackEl.innerText = 'Please enter a number!';
-        feedbackEl.classList.add('wrong');
-        return;
-    }
-
-    if (userAnswer === correctAnswer) {
+    if (userChoice === isEquationCorrect) {
+        // User was right!
         score++;
         feedbackEl.innerText = 'Correct!';
         feedbackEl.classList.add('correct');
     } else {
-        feedbackEl.innerText = `Wrong! The answer was ${correctAnswer}.`;
+        // User was wrong
+        feedbackEl.innerText = 'Wrong!';
         feedbackEl.classList.add('wrong');
     }
 
     scoreEl.innerText = score;
-    
-    // Generate a new question immediately
-    // We remove the timeout to allow for rapid play
-    generateQuestion();
+
+    // Generate the next equation after a short delay
+    setTimeout(generateEquation, 500); // 0.5-second delay
 }
 
-// --- New Timer Functions ---
+// --- Timer and Game State Functions ---
 
-// Function to update the timer display
 function updateTimer() {
     timeLeft--;
     timerDisplay.innerText = timeLeft;
@@ -72,69 +96,47 @@ function updateTimer() {
     }
 }
 
-// Function to handle the end of the game
 function endGame() {
-    // Stop the timer
     clearInterval(timerInterval); 
     gameStarted = false;
 
-    // Show feedback
     feedbackEl.innerText = `Time's up! Your final score is ${score}.`;
     feedbackEl.classList.remove('correct', 'wrong');
 
     // Hide game elements and show start button
-    inputEl.style.display = 'none';
-    submitBtn.style.display = 'none';
-    questionEl.style.display = 'none';
-    startGameBtn.style.display = 'block'; // Show "Start Game" button again
-    startGameBtn.innerText = "Play Again?"; // Change button text
+    equationDisplay.style.display = 'none';
+    choiceBtnContainer.style.display = 'none';
+    startGameBtn.style.display = 'block'; 
+    startGameBtn.innerText = "Play Again?";
 }
 
-// --- Updated Start Game Function ---
 function startGame() {
-    // Stop any existing timer
     clearInterval(timerInterval); 
 
-    // Reset game state
     gameStarted = true;
     score = 0; 
-    timeLeft = 60; // Reset timer
+    timeLeft = 60;
     scoreEl.innerText = score;
     timerDisplay.innerText = timeLeft;
 
     // Show/hide the correct elements
     startGameBtn.style.display = 'none'; 
-    inputEl.style.display = 'block'; 
-    submitBtn.style.display = 'block'; 
-    questionEl.style.display = 'block';
+    equationDisplay.style.display = 'block';
+    choiceBtnContainer.style.display = 'flex'; // Use 'flex' to show it
     feedbackEl.innerText = '';
-    feedbackEl.classList.remove('correct', 'wrong');
 
-    generateQuestion();
-    inputEl.focus();
-
-    // Start the timer
-    // setInterval will call the 'updateTimer' function every 1000ms (1 second)
+    generateEquation(); // Generate the first equation
     timerInterval = setInterval(updateTimer, 1000);
 }
 
 
 // --- Event Listeners ---
-
-submitBtn.addEventListener('click', checkAnswer);
-
-inputEl.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        checkAnswer();
-    }
-});
-
+trueBtn.addEventListener('click', () => checkAnswer(true));
+falseBtn.addEventListener('click', () => checkAnswer(false));
 startGameBtn.addEventListener('click', startGame); 
 
 // --- Initial Setup ---
-
 // Hide game elements until 'Start Game' is clicked
-inputEl.style.display = 'none';
-submitBtn.style.display = 'none';
-questionEl.style.display = 'none';
-timerDisplay.innerText = '60'; // Show the starting time
+equationDisplay.style.display = 'none';
+choiceBtnContainer.style.display = 'none';
+timerDisplay.innerText = '60';
